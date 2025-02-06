@@ -4,19 +4,16 @@ import { NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/resume(.*)",
-  "/cover-letter(.*)",
-  "/interview-prep(.*)",
+  "/interview(.*)",
+  "/ai-cover-letter(.*)",
   "/onboarding(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const authData = await auth(); // Await the auth function
-  // console.log("Auth Data:", authData); // Log the result to see its structure
-
-  const { userId } = authData;
+  const { userId } = await auth();
 
   if (!userId && isProtectedRoute(req)) {
-    const { redirectToSignIn } = authData;
+    const { redirectToSignIn } = await auth();
     return redirectToSignIn();
   }
 
